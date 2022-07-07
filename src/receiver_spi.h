@@ -5,10 +5,10 @@
 #include <SPI.h>
 
 namespace ReceiverSpi {
+  void setup();
   void setSynthRegisterB(uint16_t value);
   void setPowerDownRegister(uint32_t value);
   void setStateRegister(uint32_t value);
-
   void rxStandby();
   void rxPowerOn();
 };

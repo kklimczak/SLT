@@ -10,6 +10,13 @@ static inline void sendRegister(uint8_t address, uint32_t data);
 #define SPI_ADDRESS_STATE   0x0F
 
 namespace ReceiverSpi {
+    void setup() {
+        pinMode(23, OUTPUT);
+        pinMode(18, OUTPUT);
+        pinMode(5, OUTPUT);
+        digitalWrite(5, HIGH);
+        SPI.begin(18, 19, 23);
+    }
     //
     // Sends SPI command to receiver module to change frequency.
     //

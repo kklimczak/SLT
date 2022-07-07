@@ -16,12 +16,8 @@ void setup() {
   Serial.begin(9600);
   SerialBT.begin("LapTimer");
   Serial.println("The device started");
-  pinMode(23, OUTPUT);
-  pinMode(18, OUTPUT);
-  pinMode(5, OUTPUT);
-  digitalWrite(5, HIGH);
-  SPI.begin(18, 19, 23);
-  pinMode(4, INPUT);
+  ReceiverSpi::setup();
+  
 
   delay(5000);
   Serial.println("Receiver setup...");

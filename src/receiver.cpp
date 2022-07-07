@@ -86,6 +86,7 @@ namespace Receiver {
         #ifdef DISABLE_AUDIO
             ReceiverSpi::setPowerDownRegister(0b00010000110111110011);
         #endif
+        pinMode(4, INPUT);
         setChannel(channel);   
     }
 
