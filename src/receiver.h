@@ -36,6 +36,8 @@ namespace Receiver {
 
     extern uint16_t  rssi;
     extern uint32_t rssiRaw;
+    extern uint16_t  rssi2;
+    extern uint32_t rssiRaw2;
     extern uint16_t  rssiLast[RECEIVER_LAST_DATA_SIZE];
     
     extern uint16_t rssiBandScanData[CHANNELS_SIZE];

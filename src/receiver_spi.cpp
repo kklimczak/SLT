@@ -13,8 +13,10 @@ namespace ReceiverSpi {
     void setup() {
         pinMode(23, OUTPUT);
         pinMode(18, OUTPUT);
-        pinMode(5, OUTPUT);
-        digitalWrite(5, HIGH);
+        pinMode(34, OUTPUT);
+        pinMode(35, OUTPUT);
+        digitalWrite(34, HIGH);
+        digitalWrite(35, HIGH);
         SPI.begin(18, 19, 23);
     }
     //
@@ -67,11 +69,13 @@ static inline void sendRegister(uint8_t addressBits, uint32_t dataBits) {
     
     SPI.beginTransaction(SPISettings(1000000, LSBFIRST, SPI_MODE0));
     
-    digitalWrite(5, LOW);
+    digitalWrite(34, LOW);
+    digitalWrite(35, LOW);
     
     SPI.transferBits(data, NULL, 25);  
     
-    digitalWrite(5, HIGH);
+    digitalWrite(34, HIGH);
+    digitalWrite(35, HIGH);
     
     SPI.endTransaction();    
     

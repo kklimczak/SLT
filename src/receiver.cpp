@@ -10,7 +10,9 @@ namespace Receiver {
     uint8_t activeChannel = 0;
     
     uint16_t  rssi = 0;
+    uint16_t rssi2 = 0;
     uint32_t rssiRaw = 0;
+    uint32_t rssiRaw2 = 0;
     uint16_t  rssiLast[RECEIVER_LAST_DATA_SIZE] = { 0 };
 
     uint16_t rssiBandScanData[CHANNELS_SIZE] = { 0 };
@@ -41,16 +43,31 @@ namespace Receiver {
         uint8_t RSSI_READS = 15; //15;
         
         rssiRaw = 0;
+        rssiRaw2 = 0;
         for (uint8_t i = 0; i < RSSI_READS; i++) {                       
             rssiRaw += analogRead(4);
+            rssiRaw2 += analogRead(2);
         }
         rssiRaw /= RSSI_READS;
+        rssiRaw2 /= RSSI_READS;
 
 
         rssi = constrain(
                 map(
                     rssiRaw,
-                    500,
+                    0,
+                    2000,
+                    0,
+                    1000
+                ),
+                0,
+                1000
+            );
+
+        rssi2 = constrain(
+                map(
+                    rssiRaw2,
+                    0,
                     2000,
                     0,
                     1000
@@ -86,6 +103,7 @@ namespace Receiver {
         #ifdef DISABLE_AUDIO
             ReceiverSpi::setPowerDownRegister(0b00010000110111110011);
         #endif
+        pinMode(2, INPUT);
         pinMode(4, INPUT);
         setChannel(channel);   
     }
