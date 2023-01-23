@@ -19,9 +19,11 @@ void setupReceiverPins() {
 
     // RX5808 has not full SPI interface implemented so MISO is not required and I used the pin for this SPI interface
     SPI.begin(SPI_SCK, 19, SPI_MOSI);
+}
 
-    changeChannel(Channels::getSynthRegisterB(0), RECEIVER_1_PIN);
-    changeChannel(Channels::getSynthRegisterB(0), RECEIVER_2_PIN);
+void setupDefaultChannels() {
+    changeChannel(Channels::getSynthRegisterB(32), RECEIVER_1_PIN);
+    changeChannel(Channels::getSynthRegisterB(34), RECEIVER_2_PIN);
 }
 
 void sendRegister(uint8_t addressBits, uint32_t dataBits, int receiverPin) {

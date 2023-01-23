@@ -19,17 +19,7 @@ enum Status
 Status status = WAITING;
 String command = "";
 
-
-void sendRSSI()
-{
-  Serial.print("r:reading:1/");
-  Serial.print(Receiver::rssi);
-  Serial.print(";2/");
-  Serial.println(Receiver::rssi2);
-}
-
-void setup()
-{
+void setup() {
 
   Serial.begin(115200);
 
@@ -39,6 +29,7 @@ void setup()
   // delay(5000);
   Serial.println("r:alive");
   setupReceiverPins();
+  setupDefaultChannels();
   // Receiver::setup(34);
   // delay(5000);
 }
@@ -64,7 +55,6 @@ void loop()
       startReadingRssi();
       break;
     case CONNECTED:
-      sendRSSI();
       break;
 
     default:
