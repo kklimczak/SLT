@@ -3,6 +3,7 @@
 #include "receiver.h"
 #include "receiver_spi.h"
 #include "channels.h"
+#include "receiver2.h"
 // #include "bluetooth.h"
 
 // #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
@@ -34,15 +35,17 @@ void setup()
 
   Serial.println("The device started");
   // Bluetooth::setup();
-  ReceiverSpi::setup();
-  delay(5000);
+  // ReceiverSpi::setup();
+  // delay(5000);
   Serial.println("r:alive");
-  Receiver::setup(34);
+  setupReceiverPins();
+  // Receiver::setup(34);
+  // delay(5000);
 }
 
 void loop()
 {
-  Receiver::updateRssi();
+  // Receiver::updateRssi();
   // Bluetooth::update();
 
   if (Serial.available() > 0) {
@@ -58,7 +61,7 @@ void loop()
     case WAITING:
       // Serial.println("r:pong");
       // delay(500);
-      sendRSSI();
+      startReadingRssi();
       break;
     case CONNECTED:
       sendRSSI();
