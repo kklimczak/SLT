@@ -10,54 +10,121 @@
 // #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
 // #endif
 
+#define LED 2
+
 enum Status
 {
   WAITING,
-  CONNECTED
+  PREPARE,
+  RACE,
 };
+
+TaskHandle_t ReceiversTask;
+TaskHandle_t MainTask;
 
 Status status = WAITING;
 String command = "";
+unsigned long millis_start;
+
+void receiversTaskFn(void * pvParameters) {
+  while (true) {
+    // startReadingRssi();
+    delay(10);
+  }
+  
+}
+
+void commandHandler() {
+  if (Serial.available() > 0) {
+
+    command = Serial.readStringUntil('\n');
+
+    String commandCategory = command.substring(0, 1);
+    Serial.println(commandCategory);
+    if (commandCategory == "s") {
+      Serial.println("channel switched");
+    } else if (commandCategory == "r") {
+      String params = command.substring(2, 3);
+      if (params == "s") {
+        status = PREPARE;
+        millis_start = millis();
+      } else if (params == "i") {
+        status = WAITING;
+      }
+    }
+  }
+}
+
+void raceHandler() {
+  if (status != WAITING) {
+    uint16_t relative_millis = millis() - millis_start;
+
+    switch (status)
+    {
+    case PREPARE:
+      if (relative_millis > 5000) {
+        status = RACE;
+      } else {
+        u_int8_t seconds = relative_millis / 1000;
+        if (relative_millis > seconds * 1000 && relative_millis < seconds * 1000 + 200) {
+          digitalWrite(LED, HIGH);
+        } else {
+          digitalWrite(LED, LOW);
+        }
+      }
+      break;
+    case RACE:
+      if (relative_millis > 5000 && relative_millis < 6000) {
+        digitalWrite(LED, HIGH);
+      } else {
+        digitalWrite(LED, LOW);
+      }
+    
+    default:
+      break;
+    }
+  }
+}
+
+void mainTaskFn(void * pvParameters) {
+  while (true) {
+    commandHandler();
+    raceHandler();
+  }
+  
+}
 
 void setup() {
 
   Serial.begin(115200);
-
-  Serial.println("The device started");
-  // Bluetooth::setup();
-  // ReceiverSpi::setup();
-  // delay(5000);
   Serial.println("r:alive");
+  pinMode(LED, OUTPUT);   
   setupReceiverPins();
   setupDefaultChannels();
-  // Receiver::setup(34);
-  // delay(5000);
+
+  xTaskCreatePinnedToCore(
+    receiversTaskFn,
+    "receiversTask",
+    10000,
+    NULL,
+    1,
+    &ReceiversTask,
+    0
+  );
+
+  delay(500);
+
+  xTaskCreatePinnedToCore(
+    mainTaskFn,
+    "mainTask",
+    10000,
+    NULL,
+    1,
+    &MainTask,
+    1
+  );
+
+    delay(500);
 }
 
-void loop()
-{
-  // Receiver::updateRssi();
-  // Bluetooth::update();
-
-  if (Serial.available() > 0) {
-    command = Serial.readStringUntil('\n');
-
-    if (command.equals("c")) {
-      Serial.println("r:connected");
-      status = CONNECTED;
-    }
-  }
-
-  switch (status) {
-    case WAITING:
-      // Serial.println("r:pong");
-      // delay(500);
-      startReadingRssi();
-      break;
-    case CONNECTED:
-      break;
-
-    default:
-      break;
-  }
-}
+void loop() {}
