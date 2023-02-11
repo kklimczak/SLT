@@ -6,8 +6,8 @@
 
 #define SPI_MOSI 23
 #define SPI_SCK 18
-#define RECEIVER_1_PIN 34
-#define RECEIVER_2_PIN 35
+#define RECEIVER_1_PIN 32
+#define RECEIVER_2_PIN 33
 // #define RECEIVER_3_PIN 32
 // #define RECEIVER_4_PIN 33
 
