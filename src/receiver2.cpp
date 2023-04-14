@@ -64,6 +64,7 @@ void readRssiFromReceivers() {
 
 void changeChannel(uint16_t value, int receiverPin) {
     sendRegister(SPI_ADDRESS_SYNTH_B, value, receiverPin);
+    rssiStableTimer.reset();
 }
 
 int getPinForReceiver(int receiverId) {
@@ -73,12 +74,18 @@ int getPinForReceiver(int receiverId) {
 void startReadingRssi() {
     if (rssiStableTimer.hasTicked()) {
         readRssiFromReceivers();
+        Serial.print("rssi");
+        Serial.print(":");
+        Serial.print(esp_timer_get_time());
+        Serial.print(":");
         for (int j = 0; j < RECEIVERS_NUMBER; j++) {
             Serial.print(j + 1);
             Serial.print("/");
             Serial.print(lastRssiValues[j]);
-            Serial.print(":");
+            if (j < RECEIVERS_NUMBER - 1) {
+                Serial.print(":");
+            }
         }
-        Serial.println(";");
+        Serial.println("");
     }
 }

@@ -28,8 +28,8 @@ unsigned long millis_start;
 
 void receiversTaskFn(void * pvParameters) {
   while (true) {
-    // startReadingRssi();
-    delay(10);
+    startReadingRssi();
+    // delay(10);
   }
   
 }
