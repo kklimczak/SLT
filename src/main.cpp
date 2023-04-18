@@ -24,11 +24,12 @@ TaskHandle_t MainTask;
 
 Status status = WAITING;
 String command = "";
-unsigned long millis_start;
+int64_t millis_start;
+int64_t micros_start;
 
 void receiversTaskFn(void * pvParameters) {
   while (true) {
-    startReadingRssi();
+    startReadingRssi(status, micros_start);
     // delay(10);
   }
   
@@ -47,9 +48,10 @@ void commandHandler() {
       String params = command.substring(2, 3);
       if (params == "s") {
         status = PREPARE;
-        millis_start = millis();
+        millis_start = esp_timer_get_time();
       } else if (params == "i") {
         status = WAITING;
+        micros_start = 0;
       }
     }
   }
@@ -57,16 +59,17 @@ void commandHandler() {
 
 void raceHandler() {
   if (status != WAITING) {
-    uint16_t relative_millis = millis() - millis_start;
+    int64_t relative_millis = esp_timer_get_time() - millis_start;
 
     switch (status)
     {
     case PREPARE:
-      if (relative_millis > 5000) {
+      if (relative_millis > 5000000) {
         status = RACE;
+        micros_start = esp_timer_get_time();
       } else {
-        u_int8_t seconds = relative_millis / 1000;
-        if (relative_millis > seconds * 1000 && relative_millis < seconds * 1000 + 200) {
+        int64_t seconds = relative_millis / 1000000;
+        if (relative_millis > seconds * 1000000 && relative_millis < seconds * 1000000 + 200000) {
           digitalWrite(LED, HIGH);
         } else {
           digitalWrite(LED, LOW);
@@ -74,7 +77,7 @@ void raceHandler() {
       }
       break;
     case RACE:
-      if (relative_millis > 5000 && relative_millis < 6000) {
+      if (relative_millis > 5000000 && relative_millis < 6000000) {
         digitalWrite(LED, HIGH);
       } else {
         digitalWrite(LED, LOW);

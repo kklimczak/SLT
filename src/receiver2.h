@@ -26,6 +26,6 @@ void sendRegister(uint8_t addressBits, uint32_t dataBits, int receiverPin);
 void readRssiFromReceivers();
 void changeChannel(uint16_t value, int receiverPin);
 int getPinForReceiver(int receiverId);
-void startReadingRssi();
+void startReadingRssi(int status, int64_t millis_start);
 
 #endif

@@ -23,7 +23,7 @@ void setupReceiverPins() {
 
 void setupDefaultChannels() {
     changeChannel(Channels::getSynthRegisterB(32), RECEIVER_1_PIN);
-    changeChannel(Channels::getSynthRegisterB(34), RECEIVER_2_PIN);
+    changeChannel(Channels::getSynthRegisterB(38), RECEIVER_2_PIN);
 }
 
 void sendRegister(uint8_t addressBits, uint32_t dataBits, int receiverPin) {
@@ -71,19 +71,21 @@ int getPinForReceiver(int receiverId) {
     return pinsByReceiverId[receiverId];
 }
 
-void startReadingRssi() {
+// status:millis:rssi_values
+void startReadingRssi(int status, int64_t millis_start)
+{
     if (rssiStableTimer.hasTicked()) {
         readRssiFromReceivers();
-        Serial.print("rssi");
+        Serial.print(status);
         Serial.print(":");
-        Serial.print(esp_timer_get_time());
+        Serial.print(esp_timer_get_time() - millis_start);
         Serial.print(":");
         for (int j = 0; j < RECEIVERS_NUMBER; j++) {
             Serial.print(j + 1);
             Serial.print("/");
             Serial.print(lastRssiValues[j]);
             if (j < RECEIVERS_NUMBER - 1) {
-                Serial.print(":");
+                Serial.print("+");
             }
         }
         Serial.println("");
