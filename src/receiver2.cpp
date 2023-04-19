@@ -22,8 +22,8 @@ void setupReceiverPins() {
 }
 
 void setupDefaultChannels() {
-    changeChannel(Channels::getSynthRegisterB(32), RECEIVER_1_PIN);
-    changeChannel(Channels::getSynthRegisterB(38), RECEIVER_2_PIN);
+    changeChannel(32, RECEIVER_1_PIN);
+    changeChannel(38, RECEIVER_2_PIN);
 }
 
 void sendRegister(uint8_t addressBits, uint32_t dataBits, int receiverPin) {
@@ -62,8 +62,8 @@ void readRssiFromReceivers() {
     }
 }
 
-void changeChannel(uint16_t value, int receiverPin) {
-    sendRegister(SPI_ADDRESS_SYNTH_B, value, receiverPin);
+void changeChannel(uint8_t value, int receiverPin) {
+    sendRegister(SPI_ADDRESS_SYNTH_B, Channels::getSynthRegisterB(value), receiverPin);
     rssiStableTimer.reset();
 }
 

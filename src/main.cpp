@@ -29,8 +29,8 @@ int64_t micros_start;
 
 void receiversTaskFn(void * pvParameters) {
   while (true) {
-    startReadingRssi(status, micros_start);
-    // delay(10);
+    // startReadingRssi(status, micros_start);
+    delay(10);
   }
   
 }
@@ -44,6 +44,9 @@ void commandHandler() {
     Serial.println(commandCategory);
     if (commandCategory == "s") {
       Serial.println("channel switched");
+      String rxNumber = command.substring(2, 3);
+      String channel = command.substring(4, 6);
+      changeChannel(std::stoi(channel.c_str()), std::stoi(rxNumber.c_str()));
     } else if (commandCategory == "r") {
       String params = command.substring(2, 3);
       if (params == "s") {
